@@ -7,7 +7,9 @@ htmlwidgets: true
 
 authors:
   - name: Andrew Wang
-
+    url:
+    affiliations:
+      name: MIT
 ---
 
 # Previous Work
