@@ -12,14 +12,15 @@ authors:
 
 # Previous Work
 
-Deepmind introduced [FunSearch](https://deepmind.google/discover/blog/funsearch-making-new-discoveries-in-mathematical-sciences-using-large-language-models/) [1], a paper that provided a unique way to generate programs that solved optimization problems. They were able to find improvements in practice to algorithmic combinatorial problems such as the Cap set problem or online bin packing. The programs generated were largely heuristic based and showed to provide promising results. The paper introduced an interesting idea of using LLM’s as a mutator in a genetic algorithm setup. Similar ideas were built on top of this paper from Deepmind including AlphaGeometry. 
+Deepmind introduced [FunSearch](https://deepmind.google/discover/blog/funsearch-making-new-discoveries-in-mathematical-sciences-using-large-language-models/) [1], a paper that provided a unique way to generate programs that solved optimization problems. They were able to find improvements in practice to algorithmic combinatorial problems such as the Cap set problem or online bin packing. The programs generated were largely heuristic based, but due to their complexity, was able to beat out traditional heuristics created. The paper introduced an interesting idea of using LLM’s as a mutator in a genetic algorithm setup. The authors would repeatedly generate new programs by combining previous ones, creating hybrids and increasing variation. Similar ideas were built on top of the idea of using LLMs as a policy from Deepmind including AlphaGeometry. 
 
-Some of the results from FunSearch seemed pretty impressive, beating traditional heuristic methods in Cap Set or the online bin-packing problem. In this work, we chose to mainly focus on the online bin-packing problem. The problem involves sequentially placing items of varying sizes into bins with a fixed capacity in real-time, aiming to minimize the number of bins used without knowing future items. To follow FunSearch’s format of the problem, we mutate a function `priority` which assigns a priority to each bin given an item that is then sorted into the highest priority bin:
+Some of the results from FunSearch seemed pretty impressive, beating the state of the art methods in Cap Set and the online bin-packing problem. In this work, we chose to mainly focus on the online bin-packing problem. The problem involves sequentially placing items of varying sizes into bins with a fixed capacity in real-time, aiming to minimize the number of bins used without knowing future items. To follow FunSearch’s format of the problem, we mutate a function `priority` which assigns a priority to each bin given an item that is then sorted into the highest priority bin:
 
 ```python
 def priority(item: float, bins: np.ndarray) -> np.ndarray:
     return -(bins - item)
 ```
+
 Unfortunately, it doesn’t seem that many in the academic community have been working on improving upon this work outside of Deepmind. The results achieved, specifically in the bin-packing problem requires up to scales of 10^6 LLM calls along with multiple runs. We introduce a new method, based around MCTS in finding heuristic programs given an evaluation function that is competitive at a much smaller scale.
 
 # Incorporating MCTS
@@ -110,7 +111,7 @@ Given the limitation in resources, I’d like to scale this method - I believe i
 
 Additionally, there are many ways to incorporate MCTS: using an actor-critic setup to transform the problem into a two-player game or performing search on the token-level instead. We chose the simplest setup, which still proved to be quite effective.
 
-In a broader scope, I hope more work is done on scaling on the dimension of inference time. As model and dataset sizes increase, an easy way to squeeze improvements out of Language Model would be to use search. In many areas where we have a fast and accurate evaluation function, using search was the key to gaining strong results. 
+In a broader scope, I hope more work is done on scaling on the dimension of inference time. As model and dataset sizes increase, an easy way to squeeze improvements in reasoning tasks with Language Model would be to use search. In many areas where we have a fast and accurate evaluation function, using search was the key to gaining strong results. 
 
 ### References:
 1.Romera-Paredes, B., Barekatain, M., Novikov, A. et al. Mathematical discoveries from program search with large language models. Nature 625, 468–475 (2024).
